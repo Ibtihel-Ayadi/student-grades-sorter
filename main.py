@@ -1,24 +1,51 @@
-# Programme pour calculer la somme des nombres dont le 2ème chiffre est pair
-T = []  # Utilisation d'une liste au lieu de numpy pour plus de simplicité
+from numpy import * 
 
-# Saisie contrôlée de N
-n = int(input("N = "))
-while not (3 <= n <= 30):
-    n = int(input("N = "))
+def saisir():
+    global n
+    ok = False
+    while not ok:
+        n = int(input("Donner un entier : "))
+        ok = 3 < n < 100
 
-# Remplissage du tableau avec validation
-for i in range(n):
-    while True:
-        nombre = int(input(f"T[{i}] = "))
-        if 100 <= nombre <= 999:
-            T.append(nombre)
-            break
+def verify(ch):
+    i = 0
+    while i < len(ch) and ("A" <= ch[i].upper() <= "Z" or ch[i] == ' '):  # Autorise les espaces
+        i += 1
+    return i == len(ch)
 
-# Calcul de la somme des nombres avec 2ème chiffre pair
-somme = 0
-for nombre in T:
-    chiffre_central = int(str(nombre)[1])  # Récupère le 2ème chiffre
-    if chiffre_central % 2 == 0:
-        somme += nombre
+def remplir(n):
+    global tn, tm
+    tn = array([str] * n)
+    tm = array([float] * n)
+    for i in range(n):
+        ok = False
+        while not ok:
+            tn[i] = input(f"Donner tn[{i}] = ")
+            ok = verify(tn[i])
+        ok = False
+        while not ok:
+            tm[i] = float(input("Donner la moyenne : "))
+            ok = 0 <= tm[i] <= 20
 
-print("Somme =", somme)
+def tri(n, tn, tm):
+    for i in range(n-1):
+        pos_max = i
+        for j in range(i+1, n):
+            if tm[pos_max] < tm[j]:
+                pos_max = j
+        if i != pos_max:
+            # Échange des moyennes (tm)
+            tm[i], tm[pos_max] = tm[pos_max], tm[i]
+            # Échange des noms (tn)
+            tn[i], tn[pos_max] = tn[pos_max], tn[i]
+
+def afficher(n, tn, tm):
+    for i in range(n):
+        if tm[i] >= 10:
+            print(f"{tn[i]} : {tm[i]}")
+
+# Exécution principale
+saisir()
+remplir(n)
+tri(n, tn, tm)
+afficher(n, tn, tm)
